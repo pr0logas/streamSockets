@@ -18,7 +18,7 @@ UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 count = 0
 while True:
     msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-    print(count)
     count += 1
+    print(count * 1024)
     with open("LTVHD.tv", "ab") as f:
         f.write(msgFromServer[0])
