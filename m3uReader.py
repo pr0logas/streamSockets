@@ -1,7 +1,7 @@
-from defaults import sourceM3u8
 import urllib.request
 from time import strftime
 from errorMessages import mainErrors
+import m3u8
 
 
 def getContent(url):
@@ -15,35 +15,21 @@ def getContent(url):
         timeSet = strftime("\n%Y-%m-%d %H:%M:%S", gmtime())
         print(url + timeSet + mainErrors['streamDataNotFound'])
 
-def truncateTheFile():
-    f = open('playlists/playlist.m3u','a')
-    f.seek(0)
-    f.truncate()
-
-def writePlaylistToFile(data):
-    f = open('playlists/playlist.m3u','a')
-    f.write(data)
-    f.close()
+def parseStreamingLinks(data):
+    count = 0
+    for i in data:
+        if i == 1:
+            break
+        playlist = m3u8.load(i)
+        print(playlist.dumps())
+        count += 1
 
 def readPlaylist():
-    f = open('playlists/playlist.m3u','r')
+    f = open('playlists/playlist.m3u8','r')
     fdata = f.readlines()
     f.close()
     return fdata
 
-def firstAggregation(data):
-    playList = []
-    for line in data:
-        if line != '\n':
-            line2 = line.replace("\n", "")
-            playList.append(line2)
-    return playList
 
-m3u8Content = getContent(sourceM3u8).decode("utf-8")
-writePlaylistToFile(m3u8Content)
-result = firstAggregation(readPlaylist())
-truncateTheFile()
 
-for i in result:
-    if i.startswith( 'http://stream' ):
-        writePlaylistToFile(i + '\n')
+
