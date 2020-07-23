@@ -27,5 +27,5 @@ def startSocket():
                 byte = f.read(bytes_size_to_process)
                 sendDataOverSocket(byte)
                 count += + bytes_size_to_process
-                sleep(0.005)
+                sleep(0.001)
                 print("Bytes sent: " + str(count) + "/" + str(os.stat('channels/LTVHD.tv').st_size))
