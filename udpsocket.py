@@ -1,28 +1,31 @@
 import socket
 import os
+from time import sleep
+
+MCAST_GRP = '192.168.88.36'
+MCAST_PORT = 9004
+MULTICAST_TTL = 2
+bytes_size_to_process = 1024
 
 def startSocket():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(('0.0.0.0', 9004))
-    bytes_size_to_process = 1024
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+    s.setsockopt(socket.IPPROTO_IP, socket.IP_MULTICAST_TTL, MULTICAST_TTL)
 
     def sendDataOverSocket(data):
-            print("Sending data to " + str(address) + " " + str(bytes_size_to_process) + " bytes")
-            s.sendto(data, address)
+        print("Serving multicast data to: " + str(MCAST_GRP) + ":" + str(MCAST_PORT) +  " " + str(bytes_size_to_process) + " bytes")
+        s.sendto(data, (MCAST_GRP, MCAST_PORT))
 
     print("Found " + str(os.stat('channels/LTVHD.tv').st_size) + " bytes file to stream. Waiting for clients...")
 
     while True:
-        data, address = s.recvfrom(1)
-
-        if address:
+        with open("channels/LTVHD.tv", "rb") as f:
+            byte = f.read(bytes_size_to_process)
+            sendDataOverSocket(byte)
             count = 0
-            print("Got a new client! " + str(address) + " Preparing to serve the data...")
-            with open("channels/LTVHD.tv", "rb") as f:
+
+            while byte:
                 byte = f.read(bytes_size_to_process)
                 sendDataOverSocket(byte)
-                while byte:
-                    byte = f.read(bytes_size_to_process)
-                    sendDataOverSocket(byte)
-                    count += + bytes_size_to_process
-                print(count)
+                count += + bytes_size_to_process
+                sleep(0.005)
+                print("Bytes sent: " + str(count) + "/" + str(os.stat('channels/LTVHD.tv').st_size))
