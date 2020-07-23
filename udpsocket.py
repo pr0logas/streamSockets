@@ -2,7 +2,7 @@ import socket
 import os
 from time import sleep
 
-MCAST_GRP = '192.168.88.36'
+MCAST_GRP = '10.10.10.10'
 MCAST_PORT = 9004
 MULTICAST_TTL = 2
 bytes_size_to_process = 1024

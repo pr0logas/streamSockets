@@ -11,4 +11,4 @@ from udpsocket import startSocket
 streamedData = streamRequest(sourceURL)
 w = Writer('LTVHD.tv', streamedData)
 w.channelWriter()
-startSocket()
+#startSocket()
