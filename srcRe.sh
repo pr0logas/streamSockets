@@ -8,6 +8,11 @@ path="${dir}playlist"
 
 latestVideoFile=''
 
+function prepareENV {
+	mkdir -p $dir
+	mkdir -p $sreamingDir
+}
+
 function getData {
 	timestamp=$(date +"%Y-%m-%d_%H-%M-%S-%s")
 	result=$(/usr/bin/curl -s $sourcePlaylist | grep $parsingParam)
@@ -24,7 +29,11 @@ function getData {
 function saveVideoFile {
 	timestamp=$(date +"%Y-%m-%d_%H-%M-%S-%s")
 	cd $sreamingDir
+
 	/usr/bin/curl -s $1 -o mov-${timestamp}.ts
+	if [[ $? -eq "0" ]]; then
+                echo "$timestamp SUCCESS! Just downloaded and saved mov-${timestamp}.ts! file."
+     	fi
 	cd ${sreamingDir} && ls -1tr | head -n -10 | xargs -d '\n' rm -f --
 	ln -nsf ${sreamingDir}mov-${timestamp}.ts ${sreamingDir}currentFile.ts || true
 }
@@ -33,8 +42,10 @@ function saveVideoFile {
 function getFileList {
 	fresult=$(cat ${dir}playlist.m3u8 | head -1)
 	cresult=$(/usr/bin/curl -s $fresult | grep $parsingParam)
-	set -- $cresult
+        if [[ $? -eq "0" ]]; then
+		set -- $cresult
 		latestVideoFile=$1
+        fi
 }
 
 function startProcess {
@@ -47,4 +58,5 @@ function startProcess {
 	done
 }
 
+prepareENV
 startProcess
