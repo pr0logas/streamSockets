@@ -5,7 +5,7 @@
 
 from streamer import streamRequest
 from writer import Writer
-from defaults import sourceURL
+#from defaults import sourceURL
 from udpsocket import startSocket
 
 #streamedData = streamRequest(sourceURL)
