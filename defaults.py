@@ -1,0 +1,1 @@
+sourceURL = 'http://stream.lem.lt/storade_tv/54FSA5yHf7tR55Tdvb5/lnk_hd/wc05CM4ITNw0yNw8CNy8SNx8iMy8yNw8CMyAjMvQGaftmbs9SMwAjZvEDOwYjO0xmLzl2auUGajF2YuYHdwl2LvoDc0RHa.ts'
